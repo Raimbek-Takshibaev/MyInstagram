@@ -1,0 +1,33 @@
+﻿@model UserIndexModelView
+@inject IViewLocalizer Localizer
+@{ 
+    ViewBag.Title = "Пользователи";
+}
+@if(Model.Users.Count == 0)
+{
+    <h4 class="text-center">@Localizer["NotFound"]</h4>
+}
+    <div class="list-group col-md-10 mt-3 mb-3" style="margin: auto;">
+        @foreach (User user in Model.Users)
+         {
+            <a asp-action="Details" class="list-group-item list-group-item-action" asp-route-userName="@user.UserName">
+                <div class="row">
+                    <div class="list-image col-md-3">
+                        <img src="../@user.AvatarPath" alt="image" style="border: 1px solid black;
+    padding: 10px 15px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    object-fit: cover;">
+                    </div>
+                    <div class="col-md-9">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@Localizer["Name"] - @user.NameSurname  @Localizer["Login"] - @user.UserName</h5>
+                    </div>
+                    <p class="mb-1">@user.Description</p>
+                    <small class="text-muted">@user.Email</small>
+                    </div>
+                </div>
+            </a>
+         }
+    </div>

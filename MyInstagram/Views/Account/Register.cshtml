@@ -1,0 +1,98 @@
+﻿@model AccountRegisterModelView
+@inject IViewLocalizer Localizer
+@{
+    Layout = "_AccountLoggerLayout";
+}
+<div class="container">
+    <div class="d-flex justify-content-center">
+        <div class="col-sm-6 bg-phone-image">
+            <figure class="images"></figure>
+        </div>
+        <div class="col-sm-6">
+            <div class="right-column text-center">
+                <div class="form-logo"></div>
+                <h1 class="form-title">
+                   @Localizer["RegisterMessage"]
+                </h1>
+                <form enctype="multipart/form-data" asp-antiforgery="true" asp-action="Register" asp-controller="Account" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="@Localizer["EmailInput"]*" asp-for="Email">
+                        <span asp-validation-for="Email"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="@Localizer["LoginWord"]*" asp-for="Nickname">
+                        <span asp-validation-for="Nickname"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <div class="custom-file">
+                            <input accept=".jpeg .png .jpg" type="file" class="form-control custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" asp-for="Avatar">
+                            <label class="custom-file-label avatar-input" for="inputGroupFile01">
+                                @Localizer["AvatarWord"]*
+                            </label>
+                        </div>
+                        <div asp-validation-summary="ModelOnly"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea placeholder="@Localizer["UserDescPH"]" class="form-control" id="exampleFormControlTextarea1" rows="3" asp-for="Description"></textarea>
+                        <span asp-validation-for="Description"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="@Localizer["UserNameSurnamePH"]" asp-for="NameSurname">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="@Localizer["PhoneNumber"]" asp-for="PhoneNumber">
+                    </div>
+                    <p>Пол</p>
+                    <div class="row d-flex justify-content-center sex-checkboxes">
+                        <div class="form-group form-check mr-2">
+                            <input type="checkbox" class="sex-check form-check-input" asp-for="Male">
+                            <label class="form-check-label" for="exampleCheck1">@Localizer["MaleWord"]</label>
+                        </div>
+                        <div class="form-group form-check ml-2">
+                            <input type="checkbox" class="sex-check form-check-input" asp-for="Female">
+                            <label class="form-check-label" for="exampleCheck1">@Localizer["FemaleWord"]</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="@Localizer["PasswordWord"]*" asp-for="Password">
+                        <span asp-validation-for="Password"></span>
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" placeholder="@Localizer["ConfirmPassword"]*" asp-for="ConfirmPassword">
+                        <span asp-validation-for="ConfirmPassword"></span>
+                    </div>
+                    <div asp-validation-summary="All"></div>
+                    <button type="submit" class="btn btn-primary btn-block text-center">@Localizer["Register"]</button>
+                </form>
+
+            </div>
+            <div class="right-column text-center" style="margin-top: 16px !important; padding: 20px !important;">
+                <p style="margin-bottom: 0px;">
+                    @Localizer["AccountQuestion"] <a asp-action="Login">@Localizer["LoginHref"]</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(function () {
+            $("input:checkbox").on('click', function () {
+                var $box = $(this);
+                if ($box.is(":checked")) {
+                    var group = 'input:checkbox[class="' + $box.attr("class") + '"]';
+                    $(group).prop("checked", false);
+                    $box.prop("checked", true);
+                } else {
+                    $box.prop("checked", false);
+                }
+            });
+        });
+    </script>
+}
+

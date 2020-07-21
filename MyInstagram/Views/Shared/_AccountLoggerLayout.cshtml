@@ -1,0 +1,106 @@
+﻿@inject IViewLocalizer Localizer
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyInstagram</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link href="~/css/form-styles.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+    <div class="preloader">
+        <div class="preloader__image"></div>
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+    <footer class="form-footer">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" asp-action="Login" asp-controller="Account">@Localizer["SignIn"]<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-action="Register" asp-controller="Account">@Localizer["Registration"]<span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+        <p style="color: #8e8e91;">© INSTAGRAM ОТ FACEBOOK, 2020</p>
+    </footer>
+        </div>
+    <script type="text/javascript">
+        function loadImages(srcs) {
+            return new Promise(done => {
+                const result = [];
+                const total = srcs.length;
+                let loaded = 0;
+
+                function onload(event, i) {
+                    loaded++;
+                    result[i] = event.type === 'error' ? new Error(event.target) : event.target;
+
+                    if (loaded === total) done(result);
+                }
+
+                for (let i = 0; i < total; i++) {
+                    const img = new Image();
+                    img.addEventListener('load', (event) => onload(event, i));
+                    img.addEventListener('error', (event) => onload(event, i));
+                    img.src = srcs[i];
+                }
+            });
+        }
+
+        async function fadeInOutImages(container, images, showDuration, startFrom = 0) {
+            images = (await loadImages(images)).filter(img => !(img instanceof Error));
+            const total = images.length;
+
+            const els = images.map((img, i) => {
+                const el = document.createElement('div');
+                el.classList.add('image', 'hide');
+                el.style.backgroundImage = `url('${img.src}')`;
+                return el;
+            });
+            els.forEach((el) => container.appendChild(el));
+
+            let cur = startFrom;
+            let next = (cur + 1) % total;
+
+            els[cur].classList.add('show');
+
+            function tick() {
+                els[cur].classList.remove('show');
+                els[next].classList.add('show');
+                cur = next;
+                next = (cur + 1) % total;
+                setTimeout(tick, showDuration);
+            }
+            setTimeout(tick, showDuration);
+        }
+
+        const images = [
+            'https://www.instagram.com/static/images/homepage/screenshot1.jpg/d6bf0c928b5a.jpg',
+            'https://www.instagram.com/static/images/homepage/screenshot2.jpg/6f03eb85463c.jpg',
+            'https://www.instagram.com/static/images/homepage/screenshot3.jpg/f0c687aa6ec2.jpg',
+            'https://www.instagram.com/static/images/homepage/screenshot4.jpg/842fe5699220.jpg',
+            'https://www.instagram.com/static/images/homepage/screenshot5.jpg/0a2d3016f375.jpg'
+        ];
+
+        fadeInOutImages(document.querySelector('.images'), images, 4000);
+    </script>
+    <script>
+        window.onload = function () {
+            document.body.classList.add('loaded_hiding');
+            window.setTimeout(function () {
+                document.body.classList.add('loaded');
+                document.body.classList.remove('loaded_hiding');
+            }, 500);
+        }
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

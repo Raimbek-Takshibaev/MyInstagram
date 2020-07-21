@@ -1,0 +1,29 @@
+﻿@model PublicationCreateViewModel
+@inject IViewLocalizer Localizer
+@{
+    ViewBag.Title = "Новая публикация";
+}
+<div class="card text-center col-md-7" style="margin: auto;">
+    <div class="card-header">
+        @Localizer["NewPub"]
+    </div>
+    <div class="card-body">
+        <form enctype="multipart/form-data" asp-action="Create" method="post">
+            <div class="form-group">
+                <label for="exampleFormControlInput1">@Localizer["AddDesc"]</label>
+                <input type="text" class="form-control" id="exampleFormControlInput1" asp-for="Inscription">
+                <span asp-validation-for="Inscription"></span>
+            </div>
+            <div class="form-group mb-3">
+                <div class="custom-file">
+                    <input asp-for="Image" accept=".jpeg .png .jpg" type="file" class="form-control custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01">
+                    <label class="custom-file-label avatar-input" for="inputGroupFile01">
+                        @Localizer["Image"]*
+                    </label>
+                </div>
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <button type="submit" class="btn btn-primary">@Localizer["Add"]</button>
+        </form>
+    </div>
+</div>

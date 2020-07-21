@@ -1,0 +1,104 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+.phone{
+	padding-top: 70px;
+	height: 600px;
+	float: right;
+	margin: 10px;
+}
+body{
+	background-color: #fafafa !important; 
+}
+.bg-phone-image{
+	background-image: url(https://www.instagram.com/static/images/homepage/home-phones.png/43cc71bb1b43.png);
+	background-repeat: no-repeat;
+	margin: 40px -20px 0 100px;
+	width: 378px;
+}
+.images {
+	margin-top: 70px;
+	height: 600px;
+	width: 378px;
+  margin: 0;
+  position: relative;
+}
+
+.image {
+	-webkit-box-shadow: 0px 1px 1px 3px rgba(52,50,50,1);
+-moz-box-shadow: 0px 1px 1px 3px rgba(52,50,50,1);
+box-shadow: 0px 1px 1px 3px rgba(52,50,50,1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 132px;
+  margin-top: 96px;
+  height: 434px;
+  width: 247px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.hide {
+  opacity: 0;
+  transition: opacity 1000ms linear;
+}
+
+.show {
+  opacity: 1;
+  transition: opacity 1000ms linear;
+}
+.form-logo{
+	background-image: url(../images/logoform.png);
+	background-repeat: no-repeat;
+	width: 184px;
+	height: 70px;
+	margin: auto;
+}
+.right-column{
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	width: 350px;
+	margin: 25px -40px 0px;
+	padding: 25px 40px;
+}
+.form-title{
+	margin-top: 15px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #e6e6e6;
+	margin-bottom: 10px;
+	font-weight: 600;
+	font-size: 17px;
+	line-height: 20px;
+	color: #999;
+}
+.form-group{
+	margin-bottom: 6px !important;
+}
+.form-control{
+	background: #fafafa !important;
+	border: 1px solid #efefef !important;
+	font-size: 12px !important;
+}
+.avatar-input{
+	color: #6c757d;
+	border: 1px solid #efefef !important;
+	font-size: 12px !important;
+	text-align: left !important;
+	background: #fafafa !important;
+}
+.sex-checkboxes{
+	margin-top: -15px;
+}
+.form-check-label{
+	margin-top: -4px !important;
+}
+.form-footer{
+	padding-bottom: 30px;
+	margin-top: 80px;
+}
+.container{
+	width: 1000px !important;
+}

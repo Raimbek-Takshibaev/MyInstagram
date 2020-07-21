@@ -1,0 +1,225 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px; /* Vertically center the text there */
+}
+body {
+    margin: 0;
+}
+
+.preloader {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background: #f6f6f6;
+    z-index: 1001;
+}
+
+.preloader__image {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    margin-top: -32px;
+    margin-left: -32px;
+    background: url(https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTMf4F9axrQ6Jd8lliDVK9JC3Ip39_lRegXw7QsY_va3lfM0hEp&usqp=CAU) no-repeat 50% 50%;
+    /*расположение (url) изображения gif и др. параметры*/
+}
+
+.loaded_hiding .preloader {
+    transition: 0.3s opacity;
+    opacity: 0;
+}
+
+.loaded .preloader {
+    display: none;
+}
+.form-footer {
+    padding-bottom: 30px;
+    margin-top: 80px;
+}
+
+.container {
+    width: 1000px !important;
+}
+.field-validation-error {
+    padding: 3px 4px 3px 4px;
+    background-color: #e61c1c;
+    opacity: 0.8;
+    border-radius: 3px;
+    margin-top: 3px;
+    color: white;
+    text-align: left !important;
+}
+.list-image {
+    border: 1px solid black;
+    padding: 10px 15px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+.Instagram-card {
+    background: #ffffff;
+    border: 1px solid #f2f2f2;
+    border-radius: 3px;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.Instagram-card-header {
+    padding: 20px;
+    height: 40px;
+}
+
+.Instagram-card-user-image {
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    object-fit: cover;
+}
+
+.Instagram-card-time {
+    float: right;
+    width: 80px;
+    padding-top: 10px;
+    text-align: right;
+    color: #999;
+}
+
+.Instagram-card-user-name {
+    margin-left: 20px;
+    font-weight: bold;
+    color: #262626;
+}
+
+.Instagram-card-content {
+    padding: 20px;
+    max-width: 580px;
+}
+
+.Likes {
+    font-weight: bold;
+}
+
+.Instagram-card-content-user {
+    font-weight: bold;
+    color: #262626;
+}
+
+.hashtag {
+    color: #003569;
+}
+
+.comments {
+    color: #999;
+}
+
+.user-comment {
+    color: #003569;
+}
+
+.Instagram-card-footer {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+hr {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    margin-top: 30px;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+
+.footer-action-icons {
+    font-size: 16px;
+    color: #ccc;
+}
+
+.comments-input {
+    border: none;
+    outline: none;
+    margin-left: 10px;
+    width: 100%;
+}
+
+    .comments-input :focus {
+        outline: none !important;
+        border: none !important;
+    }
+

@@ -1,0 +1,154 @@
+﻿@model AccountDetailsModelView
+@inject IViewLocalizer Localizer
+@{
+    ViewBag.Title = "Details";
+}
+<div class="container">
+    <div class="stats mb-3 border-bottom pb-3">
+        <div class="row no-gutters">
+            <div class="user-profile-image">
+                <img src="@Model.User.AvatarPath" class="card-img user-avatar" alt="...">
+            </div>
+            <div style="width: 580px">
+                <div class="card-body">
+                    <div class="row">
+                        <h5 class="card-title login-profile">@Model.User.UserName</h5>
+                        <a asp-action="Edit" role="button" class="profile-edit-btn">@Localizer["EditProfile"]</a>
+                        <div class="profile-settings-btn">
+                            <i class="fas fa-cog" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <p class="profile-info-item">
+                            <span class="profile-info-number">@Model.Publications.Count</span> @Localizer["Publications"]
+                        </p>
+                        <p class="profile-info-item">
+                            <span class="profile-info-number">@(Model.Subscribers.Count)</span> @Localizer["Subscribers"]
+                        </p>
+                        <p class="profile-info-item">
+                            <span class="profile-info-number">@(Model.Subscribes.Count)</span> @Localizer["Subscribes"]
+                        </p>
+                    </div>
+                    <div class=row>
+                        <p class="user-name">@Model.User.NameSurname</p>
+                    </div>
+                    <div class=row>
+                        <p class="user-name">@Model.User.Description</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <button id="getEmailDataBtn" type="button" class="btn btn-primary mr-2">Получить мои данные на почту</button>
+                    <a role="button" asp-action="Create" asp-controller="Publications" class="btn btn-outline-warning mr-2">
+                        @Localizer["NewPub"]
+                    </a>
+                    <form asp-action="Logout" method="post">
+                        <button type="submit" class="btn btn-outline-danger ml-2">
+                            @Localizer["Logout"]
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>var postIds = [];</script>
+    <div class="gallery" style="width: 1000px;">
+        @foreach (Publication pub in Model.Publications)
+        {
+            <div id="post-@pub.Id">
+                <!-- Example single danger button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle m-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @Localizer["Actions"]
+                    </button>
+                    <div class="dropdown-menu">
+                        <button id="redact-desc-@pub.Id" class="dropdown-item">@Localizer["EditDesc"]</button>
+                        <div class="dropdown-divider"></div>
+                        <button id="delete-desc-@pub.Id" class="dropdown-item">@Localizer["Delete"]</button>
+                    </div>
+                </div>
+                <a asp-action="Details" asp-controller="Publications" asp-route-pubId="@pub.Id">
+                    <div class="gallery-item" tabindex="0" style="max-width: 300px;">
+
+                        <img class="publication-image" src="../@(pub.ImagePath)" alt="">
+
+                        <div class="gallery-item-info">
+
+                            <div class="row" style="margin-left: -48px;">
+                                <p class="gallery-item-likes pr-3">
+                                    <i class="fas fa-heart" aria-hidden="true"></i> @pub.LikesIds.Count
+                                </p>
+                                <p class="gallery-item-comments">
+                                    <i class="fas fa-comment" aria-hidden="true"></i> @pub.CommentIds.Count
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <script>postIds[postIds.length] = '@pub.Id';</script>
+                <!-- Modal -->
+                <div class="modal fade" id="redact-desc-modal-@pub.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">@Localizer["EditDesc"]</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>@Localizer["Description"]</label>
+                                    <input type="text" class="form-control" value="@pub.Inscription" id="inputDescription-@pub.Id" aria-describedby="emailHelp">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Close"]</button>
+                                <button type="button" id="save-changes-@pub.Id" class="btn btn-primary">@Localizer["Save"]</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+        for (var i = 0; i < postIds.length; i++) {
+            let id = postIds[i];
+            $('#redact-desc-' + id).on('click', function () {
+                $('#redact-desc-modal-' + id).modal('show');
+                $('#save-changes-' + id).on('click', function () {
+                    var inscription = $('#inputDescription-' + id);
+                    if (inscription.val().length == 0) {
+                        inscription.insertBefore('<p class="field-validation-error">@Localizer["RequiredError"]</p>')
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("Update", "Publications")',
+                            type: 'POST',
+                            data: { 'pubId': id, 'inscription': inscription.val()},
+                            success: $('#redact-desc-modal-' + id).modal('hide')
+                        });
+                    }
+                })
+            });
+            $('#delete-desc-' + id).on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Publications")',
+                    type: 'POST',
+                    data: { 'pubId': id, },
+                    success: $('#post-' + id).remove()
+                })
+            });
+            $('#getEmailDataBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("GetDetailsEmailAjax", "Account")',
+                    type: 'GET',
+                    success: alert('Данные отправлены')
+                })
+            })
+        }
+</script>
+

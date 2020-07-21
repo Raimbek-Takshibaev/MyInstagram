@@ -1,0 +1,70 @@
+﻿@inject IViewLocalizer Localizer
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyInstagram</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~css/site.css" />
+    <link rel="stylesheet" href="css/user-styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" />
+</head>
+<body>
+    <!-- Прелоадер -->
+    <div class="preloader">
+        <div class="preloader__image"></div>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Publications" asp-action="Index">
+                    <div>
+         
+                        <img src="~/images/header-logo.png" alt="instagram">
+                    </div>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <form class="form-inline" asp-action="FindUsers" asp-controller="Users">
+                    <input class="form-control mr-sm-2" type="search" placeholder="@Localizer["SearchByKeyWord"]" aria-label="Search" name="keyWord">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">@Localizer["Find"]</button>
+                </form>
+                <div>
+                    <a asp-action="Details" asp-controller="Account">
+                        <img src="../@Model.User.AvatarPath" class="header-image" alt="image" 
+                                style="width: 30px !important;
+	                            height: 30px;
+	                            border-radius: 100%;
+	                            object-fit: cover;">
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+        <footer class="form-footer" style="width: 1000px;">
+            <p style="color: #8e8e91;">© INSTAGRAM @Localizer["From"] FACEBOOK, 2020</p>
+        </footer>
+    </div>
+
+
+    <script>
+        window.onload = function () {
+            document.body.classList.add('loaded_hiding');
+            window.setTimeout(function () {
+                document.body.classList.add('loaded');
+                document.body.classList.remove('loaded_hiding');
+            }, 0);
+        }
+    </script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

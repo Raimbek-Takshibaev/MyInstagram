@@ -1,0 +1,162 @@
+﻿@model PublicationDetailsModelView
+@inject IViewLocalizer Localizer
+@{
+    ViewBag.Title = "Подробно";
+    Publication pub = Model.Publication;
+}
+<link href="~/css/site.css" rel="stylesheet" />
+@if (User.Identity.Name == Model.Publication.Author.UserName)
+{
+    <div class="btn-group text-center">
+        <button type="button" class="btn btn-danger dropdown-toggle m-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            @Localizer["Actions"]
+        </button>
+        <div class="dropdown-menu">
+            <button id="redact-desc" class="dropdown-item">@Localizer["EditDesc"]</button>
+            <div class="dropdown-divider"></div>
+            <button id="delete-desc" class="dropdown-item">@Localizer["Delete"]</button>
+        </div>
+    </div>
+}
+<div class="Instagram-card">
+    <div class="Instagram-card-header">
+        <img src="../@pub.Author.AvatarPath" class="Instagram-card-user-image">
+        <a class="Instagram-card-user-name" asp-action="Details" asp-controller="Users" asp-route-userName="@pub.Author.UserName">
+            @pub.Author.UserName
+        </a>
+        <div class="Instagram-card-time">@pub.CreationDate.ToShortDateString()</div>
+    </div>
+
+    <div class="Instagram-card-image">
+        <img src="../@pub.ImagePath" alt="image" style="width: 600px;" />
+    </div>
+
+    <div class="Instagram-card-content">
+        <p id="like-btns" class="Likes">
+
+            @if (pub.LikesIds.Any(p => p == Model.User.Id))
+            {
+                <button class="btn btn-secondary" type="button" id="unlike-post">
+                    @Localizer["Unlike"]
+                </button>
+            }
+            else
+            {
+                <button class="btn btn-outline-danger" type="button" id="like-post">
+                    @Localizer["Like"]
+                </button>
+            }
+        </p>
+        <p class="Likes"><span id="post-likes">@pub.LikesIds.Count</span> @Localizer["Likes"]</p>
+        <p id="pub-inscription">
+            @pub.Inscription
+        </p>
+        <p class="comments">@pub.CommentIds.Count @Localizer["Comments"]</p>
+        @foreach (Comment comment in pub.Comments)
+        {
+            <p>
+                <a class="user-comment" asp-controller="Users" asp-route-userName="@comment.Author.UserName" asp-action="Details">@comment.Author.UserName</a>
+                @comment.CommentText
+            </p>
+        }
+        <div class="Instagram-card-footer">
+            <a class="footer-action-icons" href="#"><i class="fa fa-heart-o"></i></a>
+            <form class="col-md-12" name="commentText" method="post" asp-action="Create" asp-controller="Comments">
+                <div class="form-group col-md-12">
+                    <input name="commentText" class="form-control" placeholder="@Localizer["LeaveComment"]" />
+                </div>
+                <input type="hidden" name="pubId" value="@pub.Id" />
+                <button type="submit" class="btn btn-outline-warning">@Localizer["Add"]</button>
+            </form>
+            <a class="footer-action-icons" href="#"><i class="fa fa-ellipsis-h"></i></a>
+        </div>
+    </div>
+</div>
+@if (User.Identity.Name == Model.Publication.Author.UserName)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="redact-desc-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Редактировать описание</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>@Localizer["Description"]</label>
+                        <input type="text" class="form-control" value="@pub.Inscription" id="inputDescription" aria-describedby="emailHelp">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">@Localizer["Close"]</button>
+                    <button type="button" id="save-changes" class="btn btn-primary">@Localizer["Save"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@if (User.Identity.Name == Model.Publication.Author.UserName)
+{
+    <script>
+        var id = '@Model.Publication.Id';
+        $('#redact-desc').on('click', function () {
+                $('#redact-desc-modal').modal('show');
+                $('#save-changes').on('click', function () {
+                    var inscription = $('#inputDescription');
+                    if (inscription.val().length == 0) {
+                        inscription.insertBefore('<p class="field-validation-error">@Localizer["RequiredError"]</p>')
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("Update", "Publications")',
+                            type: 'POST',
+                            data: { 'pubId': id, 'inscription': inscription.val() },
+                            success: $('#redact-desc-modal').modal('hide')
+                        });
+                        $('#pub-inscription').html(inscription.val());
+                    }
+                })
+            });
+            $('#delete-desc').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Publications")',
+                    type: 'POST',
+                    data: { 'pubId': id, },
+                    success: document.location.href = '@Url.Action("Details", "Account")'
+                })
+            });
+    </script>
+}
+<script>
+    var sendLikeRequest = function (){
+        $.post('@Url.Action("LikeOrUnlike", "Publications")?pubId=@Model.Publication.Id', function (data) {
+            if (data != null) {
+                     $('#post-likes').html(data);
+                 }
+             });
+    };
+    var likeWaiting = function () {
+        $(document.getElementById('like-post')).on('click', function () {
+            sendLikeRequest();
+            $('#like-btns').html('<button class="btn btn-secondary" type="button" id="unlike-post">@Localizer["Unlike"]</button>');
+            unlikeWaiting();
+         });
+    };
+    var unlikeWaiting = function () {
+        $(document.getElementById('unlike-post')).on('click', function () {
+            sendLikeRequest();
+            $('#like-btns').html('<button class="btn btn-outline-danger" type="button" id="like-post">@Localizer["Like"]</button>');
+            likeWaiting();
+         });
+    };
+    if (document.getElementById('like-post')) {
+        likeWaiting();
+    }
+    else {
+        unlikeWaiting();
+    }
+</script>

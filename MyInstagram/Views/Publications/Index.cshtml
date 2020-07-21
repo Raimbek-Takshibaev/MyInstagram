@@ -1,0 +1,107 @@
+﻿@model PublicationIndexModelView
+@inject IViewLocalizer Localizer
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Публикации";
+}
+<link href="/css/site.css" rel="stylesheet" />
+
+@if (Model.Publications.Count == 0)
+{
+    <h4>@Localizer["EmptyPubList"]</h4>
+}
+@foreach (Publication pub in Model.Publications)
+{
+    <div class="Instagram-card">
+        <div class="Instagram-card-header">
+            <img src="../@pub.Author.AvatarPath" class="Instagram-card-user-image">
+            <a class="Instagram-card-user-name" asp-action="Details" asp-controller="Users" asp-route-userName="@pub.Author.UserName">
+                @pub.Author.UserName
+            </a>
+            <div class="Instagram-card-time">@pub.CreationDate.ToShortDateString()</div>
+        </div>
+
+        <div class="Instagram-card-image">
+            <img src="../@pub.ImagePath" alt="image" style="width: 600px;" />
+        </div>
+
+        <div class="Instagram-card-content">
+            <p id="like-btns-@pub.Id" class="Likes">
+
+                @if (pub.LikesIds.Any(p => p == Model.User.Id))
+                {
+                    <button class="btn btn-secondary" type="button" id="unlike-post-@pub.Id">
+                        @Localizer["Like"]
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-danger" type="button" id="like-post-@pub.Id">
+                        @Localizer["Unlike"]
+                    </button>
+                }
+            </p>
+            <p class="Likes"><span id="post-likes-@pub.Id">@pub.LikesIds.Count</span> @Localizer["Likes"]</p>
+            <p>
+                @pub.Inscription
+            </p>
+            <p class="comments">@pub.CommentIds.Count @Localizer["Comments"]</p>
+            @foreach (Comment comment in pub.Comments)
+            {
+                <p>
+                    <a class="user-comment" asp-controller="Users" asp-route-userName="@comment.Author.UserName" asp-action="Details">@comment.Author.UserName</a>
+                    @comment.CommentText
+                </p>
+            }
+            <div class="Instagram-card-footer">
+                <a class="footer-action-icons" href="#"><i class="fa fa-heart-o"></i></a>
+                <form class="col-md-12" name="commentText" method="post" asp-action="Create" asp-controller="Comments">
+                    <div class="form-group col-md-12">
+                        <input name="commentText" class="form-control" placeholder="@Localizer["LeaveComment"]" />
+                    </div>
+                    <input type="hidden" name="pubId" value="@pub.Id" />
+                    <button type="submit" class="btn btn-outline-warning">@Localizer["Add"]</button>
+                </form>
+                <a class="footer-action-icons" href="#"><i class="fa fa-ellipsis-h"></i></a>
+            </div>
+
+        </div>
+    </div>
+}
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+    var sendLikeRequest = function (id){
+        $.post('@Url.Action("LikeOrUnlike", "Publications")?pubId=' + id, function (data) {
+            if (data != null) {
+                     $('#post-likes-' + id).html(data);
+                 }
+             });
+    };
+    var likeWaiting = function (id) {
+        $(document.getElementById('like-post-' + id)).on('click', function () {
+            sendLikeRequest(id);
+            $('#like-btns-' + id).html('<button class="btn btn-secondary" type="button" id="unlike-post-' + id + '">@Localizer["Unlike"]</button>');
+            unlikeWaiting(id);
+         });
+    };
+    var unlikeWaiting = function (id) {
+        $(document.getElementById('unlike-post-' + id)).on('click', function () {
+            sendLikeRequest(id);
+            $('#like-btns-' + id).html('<button class="btn btn-outline-danger" type="button" id="like-post-' + id + '">@Localizer["Like"]</button>');
+            likeWaiting(id);
+         });
+    };
+</script>
+@for (int i = 0; i < Model.Publications.Count; i++)
+{
+    <script>
+        let postId = '@Model.Publications[i].Id';
+        if (document.getElementById('like-post-' + postId)) {
+            likeWaiting(postId);
+        }
+        else {
+            unlikeWaiting(postId);
+        }
+    </script>
+}
